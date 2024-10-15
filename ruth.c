@@ -11,7 +11,7 @@ MODULE_AUTHOR("Ruth");
 MODULE_VERSION("0.01");
 
 /**
- * Get syscall table based on described in DW114-3-SyscallHijacking.pdf (@DanielNiv)
+ * Getting syscall table address based on described in DW114-3-SyscallHijacking.pdf (@DanielNiv)
 */
 unsigned long kallsyms_lookup_addr;
 module_param(kallsyms_lookup_addr, ulong, S_IRUGO);
