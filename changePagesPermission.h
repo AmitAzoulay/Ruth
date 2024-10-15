@@ -19,12 +19,11 @@ int modify_to_rw_permissions(unsigned long address)
 {
     unsigned int level;    
     pte_t *pte;              
-
     pte = lookup_address(address, &level);
 
     if(pte)
     {
-        if(!(pte->pte &~ _PAGE_RW))
+        if(pte->pte &~ _PAGE_RW)
         {
             pte->pte |= _PAGE_RW; // SET the RW bit.
         }
@@ -67,7 +66,6 @@ int modify_to_ro_permissions(unsigned long address)
         if(pte->pte & _PAGE_RW)
         {
             pte->pte &= ~_PAGE_RW; // Clear the RW bit.
-            pte->pte |= _PAGE_RW; // SET the RO bit.
         }
         else
         {

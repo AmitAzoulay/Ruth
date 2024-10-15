@@ -10,17 +10,25 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Ruth");
 MODULE_VERSION("0.01");
 
-static unsigned long syscall_table_address = 0;
-module_param(syscall_table_address, ulong, 0);
+/**
+ * Get syscall table based on described in DW114-3-SyscallHijacking.pdf (@DanielNiv)
+*/
+unsigned long kallsyms_lookup_addr;
+module_param(kallsyms_lookup_addr, ulong, S_IRUGO);
+
+unsigned long (*kallsyms_lookup_func)(const char *name);
+unsigned long *sys_call_table;
 
 static int __init example_init(void)
 {
-    unsigned long *syscall_table = (unsigned long*)syscall_table_address;
+    kallsyms_lookup_func = (void*) kallsyms_lookup_addr;
+    sys_call_table = (unsigned long*)(*kallsyms_lookup_func)("sys_call_table");
+    
 
-    modify_to_rw_permissions((unsigned long)syscall_table);
-    printk(KERN_INFO "Changed to RW!\n");
-    modify_to_ro_permissions((unsigned long)syscall_table);
-    printk(KERN_INFO "Changed to RO!\n");
+    int rw_res = modify_to_rw_permissions((unsigned long)sys_call_table);
+    printk(KERN_INFO "Changed to RW!  %d\n", rw_res);
+    int ro_res = modify_to_ro_permissions((unsigned long)sys_call_table);
+    printk(KERN_INFO "Changed to RO!  %d\n", ro_res);   
     return 0;
 }
 
