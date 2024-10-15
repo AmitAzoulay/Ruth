@@ -32,6 +32,7 @@ static int __init example_init(void)
     printk(KERN_INFO "Changed to RW!  %d\n", rw_res);
     int ro_res = modify_to_ro_permissions((unsigned long)sys_call_table);
     printk(KERN_INFO "Changed to RO!  %d\n", ro_res); 
+
     return 0;
 }
 
